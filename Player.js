@@ -1,7 +1,8 @@
 import { Rectangle, rectangleList } from "./Rectangle.js";
 import { collide } from "./collision.js";
+import { applyPhysics } from "./physics.js";
 
-import { canvDim } from "./draw.js";
+import { canvDim } from "./canvas.js";
 
 export class Player extends Rectangle {
     constructor() {
@@ -10,20 +11,15 @@ export class Player extends Rectangle {
         this.grav = 0.006;
         this.walkSpeed = 0.012;
         this.jumpSpeed = 1.8;
-        this.acc = 0;
+        this.acceleration = 0;
         this.onGround = false;
         this.ppos;
     }
 
     update(deltaTime) {
+        // store previous position, use for collision later
         this.ppos = [...this.pos];
-        this.vel[0] += this.acc * deltaTime;
-        this.vel[0] *= 0.8;
-        this.pos[0] += this.vel[0] * deltaTime;
-        this.vel[1] += this.grav * deltaTime;
-        this.pos[1] += this.vel[1] * deltaTime;
-        this.ignoreSmallVelocities();
-        this.onGround = false;
+        applyPhysics(this, deltaTime);
         rectangleList.forEach((rect) => {
             collide.left(this, rect);
             collide.right(this, rect);
@@ -31,12 +27,6 @@ export class Player extends Rectangle {
             collide.below(this, rect);
         });
         this.boundToCanvas();
-    }
-
-    ignoreSmallVelocities() {
-        for (const i of [0, 1]) {
-            if (Math.abs(this.vel[i]) < 0.01) this.vel[i] = 0;
-        }
     }
 
     boundToCanvas() {
@@ -58,10 +48,10 @@ export class Player extends Rectangle {
         document.addEventListener("keydown", (e) => {
             switch (e.key) {
                 case "ArrowRight":
-                    this.acc = this.walkSpeed;
+                    this.acceleration = this.walkSpeed;
                     break;
                 case "ArrowLeft":
-                    this.acc = -this.walkSpeed;
+                    this.acceleration = -this.walkSpeed;
                     break;
                 case "ArrowUp":
                     if (this.onGround) {
@@ -76,7 +66,7 @@ export class Player extends Rectangle {
             switch (e.key) {
                 case "ArrowRight":
                 case "ArrowLeft":
-                    this.acc = 0;
+                    this.acceleration = 0;
                     break;
             }
         });

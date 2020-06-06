@@ -1,4 +1,4 @@
-import { ctx } from "./draw.js";
+import { ctx } from "./canvas.js";
 export const rectangleList = [];
 
 export class Rectangle {
