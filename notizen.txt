@@ -1,0 +1,5 @@
+die box kann derzeit in rechtecke reingeschoben werden
+
+außerdem kollideren die boxen selbst nicht miteinander
+
+im freien fall gibt es probleme mit der vel[1]: er player wird langsamer

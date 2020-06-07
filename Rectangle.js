@@ -6,6 +6,7 @@ export class Rectangle {
         this.pos = pos;
         this.size = size;
         this.color = color;
+        this.type = "Rectangle";
         rectangleList.push(this);
     }
 
@@ -13,4 +14,6 @@ export class Rectangle {
         ctx.fillStyle = this.color;
         ctx.fillRect(...this.pos, ...this.size);
     }
+
+    update() {}
 }

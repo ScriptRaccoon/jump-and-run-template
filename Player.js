@@ -1,4 +1,4 @@
-import { Box, boxList } from "./Box.js";
+import { Box } from "./Box.js";
 import { collide, boundToCanvas } from "./collision.js";
 import { applyPhysics } from "./physics.js";
 import { addControl } from "./control.js";
@@ -8,6 +8,7 @@ import { push } from "./push.js";
 export class Player extends Box {
     constructor() {
         super([100, 100], [40, 40], "red", 0.006, 0.2);
+        this.type = "Player";
         this.walkSpeed = 0.015;
         this.jumpSpeed = 1.8;
         addControl(this);
@@ -17,18 +18,15 @@ export class Player extends Box {
         this.ppos = [...this.pos];
         applyPhysics(this, deltaTime);
         rectangleList.forEach((rect) => {
-            collide.left(this, rect);
-            collide.right(this, rect);
             collide.above(this, rect);
             collide.below(this, rect);
-        });
-        boxList.forEach((box) => {
-            collide.above(this, box);
-            collide.below(this, box);
-        });
-        boxList.forEach((box) => {
-            push.left(this, box);
-            push.right(this, box);
+            if (rect.type === "Rectangle") {
+                collide.left(this, rect);
+                collide.right(this, rect);
+            } else if (rect.type === "Box") {
+                push.left(this, rect);
+                push.right(this, rect);
+            }
         });
         boundToCanvas(this);
     }
