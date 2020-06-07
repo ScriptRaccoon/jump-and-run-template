@@ -17,7 +17,6 @@ export class Player extends Rectangle {
     }
 
     update(deltaTime) {
-        // store previous position, use for collision later
         this.ppos = [...this.pos];
         applyPhysics(this, deltaTime);
         rectangleList.forEach((rect) => {
@@ -55,16 +54,18 @@ export class Player extends Rectangle {
                     break;
                 case "ArrowUp":
                     if (this.onGround) {
-                        this.vel[1] = -this.jumpSpeed;
                         this.onGround = false;
-                        break;
+                        this.vel[1] = -this.jumpSpeed;
                     }
+                    break;
             }
         });
 
         document.addEventListener("keyup", (e) => {
             switch (e.key) {
                 case "ArrowRight":
+                    this.acceleration = 0;
+                    break;
                 case "ArrowLeft":
                     this.acceleration = 0;
                     break;
