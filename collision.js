@@ -1,3 +1,5 @@
+import { canvDim } from "./canvas.js";
+
 export const collide = {
     left: function (player, rect) {
         if (player === rect) return;
@@ -47,3 +49,18 @@ export const collide = {
         }
     },
 };
+
+export function boundToCanvas(player) {
+    if (player.pos[1] + player.size[1] >= canvDim[1]) {
+        player.vel[1] = 0;
+        player.pos[1] = canvDim[1] - player.size[1];
+        player.onGround = true;
+    }
+    if (player.pos[0] <= 0) {
+        player.pos[0] = 0;
+        player.vel[0] = 0;
+    } else if (player.pos[0] + player.size[0] >= canvDim[0]) {
+        player.pos[0] = canvDim[0] - player.size[0];
+        player.vel[0] = 0;
+    }
+}

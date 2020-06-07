@@ -1,19 +1,16 @@
-import { Rectangle, rectangleList } from "./Rectangle.js";
-import { collide } from "./collision.js";
+import { Box, boxList } from "./Box.js";
+import { collide, boundToCanvas } from "./collision.js";
 import { applyPhysics } from "./physics.js";
+import { addControl } from "./control.js";
+import { rectangleList } from "./Rectangle.js";
+import { push } from "./push.js";
 
-import { canvDim } from "./canvas.js";
-
-export class Player extends Rectangle {
+export class Player extends Box {
     constructor() {
-        super([100, 100], [60, 60], "red");
-        this.vel = [0, 0];
-        this.grav = 0.006;
-        this.walkSpeed = 0.012;
+        super([100, 100], [40, 40], "red", 0.006, 0.2);
+        this.walkSpeed = 0.015;
         this.jumpSpeed = 1.8;
-        this.acceleration = 0;
-        this.onGround = false;
-        this.ppos;
+        addControl(this);
     }
 
     update(deltaTime) {
@@ -25,51 +22,14 @@ export class Player extends Rectangle {
             collide.above(this, rect);
             collide.below(this, rect);
         });
-        this.boundToCanvas();
-    }
-
-    boundToCanvas() {
-        if (this.pos[1] + this.size[1] >= canvDim[1]) {
-            this.vel[1] = 0;
-            this.pos[1] = canvDim[1] - this.size[1];
-            this.onGround = true;
-        }
-        if (this.pos[0] <= 0) {
-            this.pos[0] = 0;
-            this.vel[0] = 0;
-        } else if (this.pos[0] + this.size[0] >= canvDim[0]) {
-            this.pos[0] = canvDim[0] - this.size[0];
-            this.vel[0] = 0;
-        }
-    }
-
-    addControl() {
-        document.addEventListener("keydown", (e) => {
-            switch (e.key) {
-                case "ArrowRight":
-                    this.acceleration = this.walkSpeed;
-                    break;
-                case "ArrowLeft":
-                    this.acceleration = -this.walkSpeed;
-                    break;
-                case "ArrowUp":
-                    if (this.onGround) {
-                        this.onGround = false;
-                        this.vel[1] = -this.jumpSpeed;
-                    }
-                    break;
-            }
+        boxList.forEach((box) => {
+            collide.above(this, box);
+            collide.below(this, box);
         });
-
-        document.addEventListener("keyup", (e) => {
-            switch (e.key) {
-                case "ArrowRight":
-                    this.acceleration = 0;
-                    break;
-                case "ArrowLeft":
-                    this.acceleration = 0;
-                    break;
-            }
+        boxList.forEach((box) => {
+            push.left(this, box);
+            push.right(this, box);
         });
+        boundToCanvas(this);
     }
 }
