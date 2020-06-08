@@ -4,10 +4,10 @@ import { clearCanvas } from "./canvas.js";
 import { Rectangle, rectangleList } from "./Rectangle.js";
 import { Box } from "./Box.js";
 
-new Player([20, 0], [40, 40]);
+new Player([400, -300], [40, 40]);
+new Rectangle([400, 100], [200, 10], "blue");
 new Rectangle([700, 300], [100, 10], "blue");
 new Rectangle([200, 500], [10, 100], "blue");
-new Rectangle([400, 100], [200, 10], "blue");
 new Box([300, 0], [50, 50], "orange");
 new Box([500, 0], [50, 50], "orange");
 
