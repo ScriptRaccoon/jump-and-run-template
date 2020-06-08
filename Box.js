@@ -1,6 +1,7 @@
 import { collide, boundToCanvas } from "./collision.js";
 import { applyPhysics } from "./physics.js";
 import { Rectangle, rectangleList } from "./Rectangle.js";
+import { push } from "./push.js";
 
 export class Box extends Rectangle {
     constructor(pos, size, color, grav = 0.005, friction = 0) {
@@ -18,11 +19,14 @@ export class Box extends Rectangle {
         this.ppos = [...this.pos];
         applyPhysics(this, deltaTime);
         rectangleList.forEach((rect) => {
-            if (rect.type === "Rectangle" || rect.type === "Box") {
+            if (rect.type === "Rectangle") {
                 collide.left(this, rect);
                 collide.right(this, rect);
                 collide.above(this, rect);
                 collide.below(this, rect);
+            } else if (rect.type === "Box") {
+                push.left(this, rect);
+                push.right(this, rect);
             }
         });
         boundToCanvas(this);

@@ -4,7 +4,7 @@ import { clearCanvas } from "./canvas.js";
 import { Rectangle, rectangleList } from "./Rectangle.js";
 import { Box } from "./Box.js";
 
-new Player([400, -300], [40, 40]);
+new Player([100, 0], [40, 40]);
 new Rectangle([400, 100], [200, 10], "blue");
 new Rectangle([700, 300], [100, 10], "blue");
 new Rectangle([200, 500], [10, 100], "blue");
