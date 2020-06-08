@@ -13,21 +13,4 @@ export class Player extends Box {
         this.jumpSpeed = 1.45;
         addControl(this);
     }
-
-    update(deltaTime) {
-        this.ppos = [...this.pos];
-        applyPhysics(this, deltaTime);
-        rectangleList.forEach((rect) => {
-            collide.above(this, rect);
-            collide.below(this, rect);
-            if (rect.type === "Rectangle") {
-                collide.left(this, rect);
-                collide.right(this, rect);
-            } else if (rect.type === "Box") {
-                push.left(this, rect);
-                push.right(this, rect);
-            }
-        });
-        boundToCanvas(this);
-    }
 }
