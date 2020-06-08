@@ -3,7 +3,7 @@ import { applyPhysics } from "./physics.js";
 import { Rectangle, rectangleList } from "./Rectangle.js";
 
 export class Box extends Rectangle {
-    constructor(pos, size, color, grav, friction) {
+    constructor(pos, size, color, grav = 0.04, friction = 0) {
         super(pos, size, color);
         this.type = "Box";
         this.grav = grav;

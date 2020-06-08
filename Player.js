@@ -4,13 +4,14 @@ import { applyPhysics } from "./physics.js";
 import { addControl } from "./control.js";
 import { rectangleList } from "./Rectangle.js";
 import { push } from "./push.js";
+import { canvDim } from "./canvas.js";
 
 export class Player extends Box {
-    constructor() {
-        super([100, 100], [40, 40], "red", 0.006, 0.2);
+    constructor(pos, size) {
+        super(pos, size, "red", 0.0045, 0.2);
         this.type = "Player";
-        this.walkSpeed = 0.015;
-        this.jumpSpeed = 1.8;
+        this.walkSpeed = 0.012;
+        this.jumpSpeed = 1.6;
         addControl(this);
     }
 

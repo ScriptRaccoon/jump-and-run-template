@@ -19,6 +19,7 @@ export const push = {
             player.pos[1] < box.pos[1] + box.size[1]
         ) {
             box.pos[0] = player.pos[0] - box.size[0];
+            player.pos[0] = box.pos[0] + box.size[0];
         }
     },
 };

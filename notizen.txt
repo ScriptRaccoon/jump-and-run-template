@@ -1,5 +1,12 @@
 die box kann derzeit in rechtecke reingeschoben werden
+das problem ist das pushen
 
-außerdem kollideren die boxen selbst nicht miteinander
+außerdem kollideren die boxen selbst nicht miteinander:
+doch, das problem ist das pushen
 
-im freien fall gibt es probleme mit der vel[1]: er player wird langsamer
+im freien fall wird der player langsamer. boxen auch.
+
+während des springens kann man manchmal nicht nach links oder rechts lenken
+
+manchmal kann man nicht mehr springen, wenn oben gedrückt hält und
+sich dabei nach links oder rechts bewegt
