@@ -1,12 +1,7 @@
-die box kann derzeit in rechtecke reingeschoben werden
-das problem ist das pushen
+- push function is not completed yet:
+-- boxes can be pushed into rectangles
+-- boxes can sometimes be pushed into each other
 
-außerdem kollideren die boxen selbst nicht miteinander:
-doch, das problem ist das pushen
+- when jumping continuously and moving right/left, the jumping stops
 
-im freien fall wird der player langsamer. boxen auch.
-
-während des springens kann man manchmal nicht nach links oder rechts lenken
-
-manchmal kann man nicht mehr springen, wenn oben gedrückt hält und
-sich dabei nach links oder rechts bewegt
+- during a jump to the right/left, it is hard to move it back to left/right

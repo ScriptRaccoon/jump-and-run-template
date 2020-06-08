@@ -2,10 +2,10 @@ export function addControl(player) {
     document.addEventListener("keydown", (e) => {
         switch (e.key) {
             case "ArrowRight":
-                player.acceleration = player.walkSpeed;
+                player.acc = player.walkSpeed;
                 break;
             case "ArrowLeft":
-                player.acceleration = -player.walkSpeed;
+                player.acc = -player.walkSpeed;
                 break;
             case "ArrowUp":
                 if (player.onGround) {
@@ -19,10 +19,10 @@ export function addControl(player) {
     document.addEventListener("keyup", (e) => {
         switch (e.key) {
             case "ArrowRight":
-                player.acceleration = 0;
+                player.acc = 0;
                 break;
             case "ArrowLeft":
-                player.acceleration = 0;
+                player.acc = 0;
                 break;
         }
     });

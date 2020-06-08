@@ -1,9 +1,5 @@
 import { Box } from "./Box.js";
-import { collide, boundToCanvas } from "./collision.js";
-import { applyPhysics } from "./physics.js";
 import { addControl } from "./control.js";
-import { rectangleList } from "./Rectangle.js";
-import { push } from "./push.js";
 
 export class Player extends Box {
     constructor(pos, size) {

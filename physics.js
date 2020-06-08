@@ -1,8 +1,8 @@
-export function applyPhysics(player, deltaTime) {
-    player.vel[0] += player.acceleration * deltaTime;
-    player.vel[0] *= 1 - player.friction;
-    player.vel[1] += player.grav * deltaTime;
-    player.pos[1] += player.vel[1] * deltaTime;
-    player.pos[0] += player.vel[0] * deltaTime;
-    player.onGround = false;
+export function applyPhysics(box, deltaTime) {
+    box.vel[0] += box.acc * deltaTime;
+    box.vel[0] *= 1 - box.friction;
+    box.vel[1] += box.grav * deltaTime;
+    box.pos[1] += box.vel[1] * deltaTime;
+    box.pos[0] += box.vel[0] * deltaTime;
+    box.onGround = false;
 }

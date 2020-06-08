@@ -10,7 +10,7 @@ export class Box extends Rectangle {
         this.grav = grav;
         this.friction = friction;
         this.vel = [0, 0];
-        this.acceleration = 0;
+        this.acc = 0;
         this.onGround = false;
         this.ppos = [...pos];
     }
