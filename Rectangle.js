@@ -2,10 +2,10 @@ import { ctx } from "./canvas.js";
 export const rectangleList = [];
 
 export class Rectangle {
-    constructor(pos, size, color) {
-        this.pos = pos;
-        this.size = size;
-        this.color = color;
+    constructor(options) {
+        this.pos = options.pos;
+        this.size = options.size;
+        this.color = options.color;
         this.type = "Rectangle";
         rectangleList.push(this);
     }

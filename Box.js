@@ -4,11 +4,12 @@ import { Rectangle, rectangleList } from "./Rectangle.js";
 import { push } from "./push.js";
 
 export class Box extends Rectangle {
-    constructor(pos, size, color, grav = 0.005, friction = 0) {
-        super(pos, size, color);
+    constructor(options) {
+        const { pos, size, color, grav, friction } = options;
+        super({ pos, size, color });
         this.type = "Box";
-        this.grav = grav;
-        this.friction = friction;
+        this.grav = grav || 0.005;
+        this.friction = friction || 0;
         this.vel = [0, 0];
         this.acc = 0;
         this.onGround = false;
