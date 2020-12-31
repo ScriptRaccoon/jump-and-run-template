@@ -1,6 +1,8 @@
 - push function is not completed yet:
--- boxes can be pushed into rectangles
--- boxes can sometimes be pushed into each other
+    -- boxes can be pushed into rectangles
+    -- boxes can sometimes be pushed into each other
+    -- the problem is that during the push function between boxes,
+        collision with rectangles is not tested anymore.
 
 - when jumping continuously and moving right/left, the jumping stops
 
