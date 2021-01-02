@@ -11,9 +11,9 @@ import { Box } from "./Box.js";
 
 // reducing to minimal example showing that pushing ignores collision:
 const A = new Rectangle({ pos: [200, 450], size: [10, 150], color: "blue" });
-const B = new Box({ pos: [240, 0], size: [50, 50], color: "orange" });
-const C = new Box({ pos: [340, 500], size: [50, 50], color: "purple" });
-C.vel = [-0.04, 0];
+const B = new Box({ pos: [240, 500], size: [50, 50], color: "orange" });
+const C = new Box({ pos: [310, 500], size: [50, 50], color: "purple" });
+C.vel = [-0.02, 0];
 
 timer.update = (deltaTime) => {
     clearCanvas();

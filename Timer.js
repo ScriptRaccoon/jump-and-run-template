@@ -1,6 +1,5 @@
 class Timer {
     constructor(deltaTime) {
-        this.deltaTime = deltaTime;
         let accumulatedTime = 0;
         let lastTime = 0;
         this.loop = (currentTime) => {
@@ -22,6 +21,14 @@ class Timer {
 
     update(deltaTime) {
         return deltaTime;
+    }
+
+    debug() {
+        window.addEventListener("keydown", (e) => {
+            if (e.key === " ") {
+                this.update(1000 / 60);
+            }
+        });
     }
 }
 

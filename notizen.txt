@@ -7,3 +7,5 @@
 - when jumping continuously and moving right/left, the jumping stops
 
 - during a jump to the right/left, it is hard to move it back to left/right
+
+- refactor: much of collision logic can move to rectangle class
