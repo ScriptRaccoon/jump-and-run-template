@@ -1,11 +1,11 @@
-import { Rectangle, rectangleList } from "./Rectangle.js";
+import { Rectangle } from "./Rectangle.js";
 import { canvDim } from "./canvas.js";
+import { objects, objectsOfType } from "./objects.js";
 
 export class Box extends Rectangle {
-    constructor(options) {
+    constructor(options, type) {
         const { pos, size, color, grav, friction, vel } = options;
-        super({ pos, size, color });
-        this.type = "Box";
+        super({ pos, size, color }, type || "Box");
         this.grav = grav || 0.005;
         this.friction = friction || 0;
         this.vel = vel ? vel : [0, 0];
@@ -27,28 +27,20 @@ export class Box extends Rectangle {
         this.ppos = [...this.pos];
         this.applyPhysics(deltaTime);
 
-        rectangleList.forEach((rect) => {
-            this.collideWith(rect).fromAbove();
-            this.collideWith(rect).fromBelow();
+        objects.forEach((obj) => {
+            this.collideWith(obj).fromAbove();
+            this.collideWith(obj).fromBelow();
         });
 
-        rectangleList
-            .filter((rect) => rect.type === "Rectangle")
-            .forEach((rect) => {
-                this.collideWith(rect).fromLeft();
-                this.collideWith(rect).fromRight();
-            });
+        objectsOfType.Rectangle.forEach((rect) => {
+            this.collideWith(rect).fromLeft();
+            this.collideWith(rect).fromRight();
+        });
 
-        rectangleList
-            .filter((rect) => rect.type === "Box")
-            .forEach((box) => {
-                if (this.vel[0] < 0) {
-                    this.push(box).toLeft();
-                }
-                if (this.vel[0] > 0) {
-                    this.push(box).toRight();
-                }
-            });
+        objectsOfType.Box.forEach((box) => {
+            this.push(box).toLeft();
+            this.push(box).toRight();
+        });
 
         this.boundToCanvas();
     }
@@ -129,47 +121,24 @@ export class Box extends Rectangle {
         };
     }
 
-    doesCollideWith(rect) {
-        return {
-            fromLeft: (distance) => {
-                return (
-                    this.pos[0] + distance <= rect.pos[0] + rect.size[0] &&
-                    this.pos[0] + distance + this.size[0] >= rect.pos[0] &&
-                    this.pos[1] + this.size[1] > rect.pos[1] &&
-                    this.pos[1] < rect.pos[1] + rect.size[1]
-                );
-            },
-            fromRight: (distance) => {
-                return (
-                    this.pos[0] - distance + this.size[0] >= rect.pos[0] &&
-                    this.pos[0] - distance <= rect.pos[0] + rect.size[0] &&
-                    this.pos[1] + this.size[1] > rect.pos[1] &&
-                    this.pos[1] < rect.pos[1] + rect.size[1]
-                );
-            },
-        };
-    }
-
     canBePushedToLeft(distance) {
         if (this.pos[0] - distance <= 0) return false;
-        return !rectangleList.some(
-            (rect) =>
-                rect.type == "Rectangle" && this.doesCollideWith(rect).fromRight(distance)
+        return !objectsOfType.Rectangle.some((rect) =>
+            this.overlapsWith(rect, -distance)
         );
     }
 
     canBePushedToRight(distance) {
         if (this.pos[0] + this.size[0] >= canvDim[0]) return false;
-        return !rectangleList.some(
-            (rect) =>
-                rect.type == "Rectangle" && this.doesCollideWith(rect).fromLeft(distance)
+        return !objectsOfType.Rectangle.some((rect) =>
+            this.overlapsWith(rect, +distance)
         );
     }
 
     push(box) {
         return {
             toLeft: () => {
-                if (this === box) return;
+                if (this === box || this.vel[0] >= 0) return;
                 if (
                     this.ppos[0] >= box.ppos[0] + box.size[0] &&
                     this.pos[0] <= box.pos[0] + box.size[0] &&
@@ -186,7 +155,7 @@ export class Box extends Rectangle {
                 }
             },
             toRight: () => {
-                if (this === box) return;
+                if (this === box || this.vel[0] <= 0) return;
                 if (
                     this.ppos[0] + this.size[0] <= box.ppos[0] &&
                     this.pos[0] + this.size[0] >= box.pos[0] &&

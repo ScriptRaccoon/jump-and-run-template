@@ -1,8 +1,7 @@
-- push function is not completed yet:
-    -- boxes can be pushed into rectangles
-    -- boxes can sometimes be pushed into each other
-    -- the problem is that during the push function between boxes,
-        collision with rectangles is not tested anymore.
+- push funktion funktioniert noch nicht 'transitiv':
+    -- wenn box eine box pusht, alles ok.
+    -- aber wenn spieler boxA pusht, kann boxA nicht boxB pushen, sondern ignoriert sie
+    -- links gibt es noch einen kleinen freiraum
 
 - when jumping continuously and moving right/left, the jumping stops
 
