@@ -1,3 +1,6 @@
+import { objects } from "./objects.js";
+import { clearCanvas } from "./canvas.js";
+
 class Timer {
     constructor(deltaTime) {
         let accumulatedTime = 0;
@@ -20,7 +23,9 @@ class Timer {
     }
 
     update(deltaTime) {
-        return deltaTime;
+        clearCanvas();
+        objects.forEach((obj) => obj.update(deltaTime));
+        objects.forEach((obj) => obj.draw());
     }
 
     debug() {
