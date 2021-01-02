@@ -20,8 +20,8 @@ export class Rectangle {
 
     overlapsWith(rect, distance = 0) {
         return (
-            this.pos[0] + distance <= rect.pos[0] + rect.size[0] &&
-            this.pos[0] + distance + this.size[0] >= rect.pos[0] &&
+            this.pos[0] + distance <= rect.pos[0] + rect.size[0] && // was <= before
+            this.pos[0] + distance + this.size[0] >= rect.pos[0] && // was >= before
             this.pos[1] + this.size[1] > rect.pos[1] &&
             this.pos[1] < rect.pos[1] + rect.size[1]
         );

@@ -29,6 +29,7 @@ class Timer {
     }
 
     debug() {
+        this.update(1000 / 60);
         window.addEventListener("keydown", (e) => {
             if (e.key === " ") {
                 this.update(1000 / 60);

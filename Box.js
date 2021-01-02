@@ -30,16 +30,8 @@ export class Box extends Rectangle {
         objects.forEach((obj) => {
             this.collideWith(obj).fromAbove();
             this.collideWith(obj).fromBelow();
-        });
-
-        objectsOfType.Rectangle.forEach((rect) => {
-            this.collideWith(rect).fromLeft();
-            this.collideWith(rect).fromRight();
-        });
-
-        [...objectsOfType.Box, ...objectsOfType.Player].forEach((box) => {
-            this.push(box).toLeft();
-            this.push(box).toRight();
+            this.collideWith(obj).fromLeft();
+            this.collideWith(obj).fromRight();
         });
 
         this.boundToCanvas();
@@ -60,118 +52,160 @@ export class Box extends Rectangle {
         }
     }
 
-    collideWith(rect) {
+    collideWith(obj) {
         return {
             fromLeft: () => {
-                if (this === rect) return false;
+                if (this === obj) return;
                 if (
-                    this.ppos[0] + this.size[0] <= rect.pos[0] &&
-                    this.pos[0] + this.size[0] >= rect.pos[0] &&
-                    this.pos[1] + this.size[1] > rect.pos[1] &&
-                    this.pos[1] < rect.pos[1] + rect.size[1]
+                    this.ppos[0] + this.size[0] <= obj.pos[0] &&
+                    this.pos[0] + this.size[0] >= obj.pos[0] &&
+                    this.pos[1] + this.size[1] > obj.pos[1] &&
+                    this.pos[1] < obj.pos[1] + obj.size[1]
                 ) {
-                    this.pos[0] = rect.pos[0] - this.size[0];
-                    return true;
+                    this.pos[0] = obj.pos[0] - this.size[0];
                 }
-                return false;
             },
             fromRight: () => {
-                if (this === rect) return false;
-
+                // WORK IN PROGRESS
+                if (this === obj) return;
                 if (
-                    this.ppos[0] >= rect.pos[0] + rect.size[0] &&
-                    this.pos[0] <= rect.pos[0] + rect.size[0] &&
-                    this.pos[1] + this.size[1] > rect.pos[1] &&
-                    this.pos[1] < rect.pos[1] + rect.size[1]
+                    this.ppos[0] >= obj.pos[0] + obj.size[0] &&
+                    this.pos[0] <= obj.pos[0] + obj.size[0] &&
+                    this.pos[1] + this.size[1] > obj.pos[1] &&
+                    this.pos[1] < obj.pos[1] + obj.size[1]
                 ) {
-                    this.pos[0] = rect.pos[0] + rect.size[0];
-                    return true;
+                    console.log("collision from right from", this.color, "on", obj.color);
+                    if (obj.type === "Rectangle") {
+                        this.pos[0] = obj.pos[0] + obj.size[0];
+                        this.vel[0] = 0;
+                        return;
+                    }
+
+                    console.log("try to push", obj.type, obj.color);
+
+                    const distance = obj.pos[0] + obj.size[0] - this.pos[0];
+
+                    const canPush = this.canBePushedToLeft(distance);
+
+                    console.log(canPush);
+
+                    if (canPush) {
+                        obj.pos[0] = this.pos[0] - obj.size[0];
+                        obj.vel[0] = this.vel[0];
+                    } else {
+                        this.pos[0] = obj.pos[0] + obj.size[0];
+                        this.vel[0] = 0;
+                    }
                 }
-                return false;
             },
             fromAbove: () => {
-                if (this === rect) return false;
+                if (this === obj) return;
                 if (
-                    this.ppos[1] + this.size[1] <= rect.pos[1] &&
-                    this.pos[1] + this.size[1] >= rect.pos[1] &&
-                    this.pos[0] + this.size[0] > rect.pos[0] &&
-                    this.pos[0] < rect.pos[0] + rect.size[0]
+                    this.ppos[1] + this.size[1] <= obj.pos[1] &&
+                    this.pos[1] + this.size[1] >= obj.pos[1] &&
+                    this.pos[0] + this.size[0] > obj.pos[0] &&
+                    this.pos[0] < obj.pos[0] + obj.size[0]
                 ) {
-                    this.pos[1] = rect.pos[1] - this.size[1];
+                    this.pos[1] = obj.pos[1] - this.size[1];
                     this.vel[1] = 0;
                     this.onGround = true;
-                    return true;
                 }
-                return false;
             },
             fromBelow: () => {
-                if (this === rect) return false;
+                if (this === obj) return;
                 if (
-                    this.ppos[1] >= rect.pos[1] + rect.size[1] &&
-                    this.pos[1] <= rect.pos[1] + rect.size[1] &&
-                    this.pos[0] + this.size[0] > rect.pos[0] &&
-                    this.pos[0] < rect.pos[0] + rect.size[0]
+                    this.ppos[1] >= obj.pos[1] + obj.size[1] &&
+                    this.pos[1] <= obj.pos[1] + obj.size[1] &&
+                    this.pos[0] + this.size[0] > obj.pos[0] &&
+                    this.pos[0] < obj.pos[0] + obj.size[0]
                 ) {
-                    this.pos[1] = rect.pos[1] + rect.size[1];
+                    this.pos[1] = obj.pos[1] + obj.size[1];
                     this.vel[1] = 0;
-                    return true;
                 }
-                return false;
             },
         };
     }
 
-    canBePushedToLeft(distance) {
+    // WORK IN PROGRESS (DOES NOT WORK YET)
+    canBePushedToLeft(distance, excludeList = []) {
+        console.log("test if push is possible");
         if (this.pos[0] - distance <= 0) return false;
-        return !objectsOfType.Rectangle.some((rect) =>
+        const directObstacles = objectsOfType.Rectangle.some((rect) =>
             this.overlapsWith(rect, -distance)
         );
-    }
-
-    canBePushedToRight(distance) {
-        if (this.pos[0] + this.size[0] >= canvDim[0]) return false;
-        return !objectsOfType.Rectangle.some((rect) =>
-            this.overlapsWith(rect, +distance)
+        const indirectObstacles = objectsOfType.Box.some(
+            (box) =>
+                box != this &&
+                !excludeList.includes(box) &&
+                this.overlapsWith(box, distance) &&
+                box.canBePushedToLeft(distance, [box, ...excludeList])
         );
+        console.log("direct obstacles", directObstacles);
+        console.log("indirect obstacles", indirectObstacles);
+        return !directObstacles && !indirectObstacles;
     }
 
-    push(box) {
-        return {
-            toLeft: () => {
-                if (this === box || this.vel[0] >= 0) return;
-                if (
-                    this.ppos[0] >= box.ppos[0] + box.size[0] &&
-                    this.pos[0] <= box.pos[0] + box.size[0] &&
-                    this.pos[1] + this.size[1] > box.pos[1] &&
-                    this.pos[1] < box.pos[1] + box.size[1]
-                ) {
-                    const distance = box.pos[0] + box.size[0] - this.pos[0];
-                    if (box.canBePushedToLeft(distance)) {
-                        box.pos[0] = this.pos[0] - box.size[0];
-                    } else {
-                        this.pos[0] = box.pos[0] + box.size[0];
-                        this.vel[0] = 0;
-                    }
-                }
-            },
-            toRight: () => {
-                if (this === box || this.vel[0] <= 0) return;
-                if (
-                    this.ppos[0] + this.size[0] <= box.ppos[0] &&
-                    this.pos[0] + this.size[0] >= box.pos[0] &&
-                    this.pos[1] + this.size[1] > box.pos[1] &&
-                    this.pos[1] < box.pos[1] + box.size[1]
-                ) {
-                    const distance = this.pos[0] + this.size[0] - box.pos[0];
+    // canBePushedToRight(distance) {
+    //     if (this.pos[0] + this.size[0] >= canvDim[0]) return false;
+    //     return !objectsOfType.Rectangle.some((rect) =>
+    //         this.overlapsWith(rect, +distance)
+    //     );
+    // }
 
-                    if (box.canBePushedToRight(distance)) {
-                        box.pos[0] = this.pos[0] + this.size[0];
-                    } else {
-                        this.pos[0] = box.pos[0] - this.size[0];
-                        this.vel[0] = 0;
-                    }
-                }
-            },
-        };
-    }
+    // push(box) {
+    //     return {
+    //         toLeft: () => {
+    //             if (this === box || this.vel[0] >= 0) return;
+    //             if (
+    //                 this.ppos[0] >= box.ppos[0] + box.size[0] &&
+    //                 this.pos[0] <= box.pos[0] + box.size[0] &&
+    //                 this.pos[1] + this.size[1] > box.pos[1] &&
+    //                 this.pos[1] < box.pos[1] + box.size[1]
+    //             ) {
+    //                 const distance = box.pos[0] + box.size[0] - this.pos[0];
+
+    //                 for (const rect of objectsOfType.Rectangle) {
+    //                     const collides = box.overlapsWith(rect, -distance);
+    //                     if (collides) {
+    //                         this.pos[0] = box.pos[0] + box.size[0];
+    //                         this.vel[0] = 0;
+    //                         return;
+    //                     }
+    //                 }
+
+    //                 console.log("can push?");
+
+    //                 this.leftBox = box;
+
+    //                 for (const otherBox of objectsOfType.Box) {
+    //                     if (otherBox !== this && otherBox !== box) {
+    //                         const collides = box.overlapsWith(otherBox, -distance);
+    //                         if (collides) console.log("collision!");
+    //                     }
+    //                 }
+
+    //                 box.pos[0] = this.pos[0] - box.size[0];
+    //                 box.vel[0] = this.vel[0];
+    //             }
+    //         },
+    //         toRight: () => {
+    //             if (this === box || this.vel[0] <= 0) return;
+    //             if (
+    //                 this.ppos[0] + this.size[0] <= box.ppos[0] &&
+    //                 this.pos[0] + this.size[0] >= box.pos[0] &&
+    //                 this.pos[1] + this.size[1] > box.pos[1] &&
+    //                 this.pos[1] < box.pos[1] + box.size[1]
+    //             ) {
+    //                 const distance = this.pos[0] + this.size[0] - box.pos[0];
+
+    //                 if (box.canBePushedToRight(distance)) {
+    //                     box.pos[0] = this.pos[0] + this.size[0];
+    //                 } else {
+    //                     this.pos[0] = box.pos[0] - this.size[0];
+    //                     this.vel[0] = 0;
+    //                 }
+    //             }
+    //         },
+    //     };
+    // }
 }
