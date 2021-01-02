@@ -3,13 +3,12 @@ import { canvDim } from "./canvas.js";
 
 export class Box extends Rectangle {
     constructor(options) {
-        const { pos, size, color, grav, friction, name } = options;
+        const { pos, size, color, grav, friction, vel } = options;
         super({ pos, size, color });
-        this.name = name;
         this.type = "Box";
         this.grav = grav || 0.005;
         this.friction = friction || 0;
-        this.vel = [0, 0];
+        this.vel = vel ? vel : [0, 0];
         this.acc = 0;
         this.onGround = false;
         this.ppos = [...pos];
@@ -134,15 +133,15 @@ export class Box extends Rectangle {
         return {
             fromLeft: (distance) => {
                 return (
-                    this.pos[0] <= rect.pos[0] + rect.size[0] &&
-                    this.pos[0] + this.size[0] + distance >= rect.pos[0] &&
+                    this.pos[0] + distance <= rect.pos[0] + rect.size[0] &&
+                    this.pos[0] + distance + this.size[0] >= rect.pos[0] &&
                     this.pos[1] + this.size[1] > rect.pos[1] &&
                     this.pos[1] < rect.pos[1] + rect.size[1]
                 );
             },
             fromRight: (distance) => {
                 return (
-                    this.pos[0] + this.size[0] >= rect.pos[0] &&
+                    this.pos[0] - distance + this.size[0] >= rect.pos[0] &&
                     this.pos[0] - distance <= rect.pos[0] + rect.size[0] &&
                     this.pos[1] + this.size[1] > rect.pos[1] &&
                     this.pos[1] < rect.pos[1] + rect.size[1]
@@ -152,6 +151,7 @@ export class Box extends Rectangle {
     }
 
     canBePushedToLeft(distance) {
+        if (this.pos[0] - distance <= 0) return false;
         return !rectangleList.some(
             (rect) =>
                 rect.type == "Rectangle" && this.doesCollideWith(rect).fromRight(distance)
@@ -159,12 +159,11 @@ export class Box extends Rectangle {
     }
 
     canBePushedToRight(distance) {
-        return rectangleList
-            .filter((rect) => rect.type === "Rectangle")
-            .every((rect) => {
-                const answer = !this.doesCollideWith(rect).fromLeft(distance);
-                return answer;
-            });
+        if (this.pos[0] + this.size[0] >= canvDim[0]) return false;
+        return !rectangleList.some(
+            (rect) =>
+                rect.type == "Rectangle" && this.doesCollideWith(rect).fromLeft(distance)
+        );
     }
 
     push(box) {
