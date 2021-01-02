@@ -10,9 +10,10 @@ import { Box } from "./Box.js";
 // new Box({ pos: [400, 0], size: [50, 50], color: "teal" });
 
 // reducing to minimal example showing that pushing ignores collision:
-const A = new Rectangle({ pos: [200, 450], size: [10, 150], color: "blue" });
-const B = new Box({ pos: [240, 500], size: [50, 50], color: "orange" });
-const C = new Box({ pos: [310, 500], size: [50, 50], color: "purple" });
+const A1 = new Rectangle({ pos: [200, 450], size: [10, 150], color: "blue" });
+const A2 = new Rectangle({ pos: [400, 450], size: [10, 150], color: "blue" });
+const B = new Box({ pos: [240, 550], size: [50, 50], color: "orange", name: "B" });
+const C = new Box({ pos: [310, 550], size: [50, 50], color: "purple", name: "C" });
 C.vel = [-0.02, 0];
 
 timer.update = (deltaTime) => {
