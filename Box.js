@@ -37,7 +37,7 @@ export class Box extends Rectangle {
             this.collideWith(rect).fromRight();
         });
 
-        objectsOfType.Box.forEach((box) => {
+        [...objectsOfType.Box, ...objectsOfType.Player].forEach((box) => {
             this.push(box).toLeft();
             this.push(box).toRight();
         });
@@ -163,6 +163,7 @@ export class Box extends Rectangle {
                     this.pos[1] < box.pos[1] + box.size[1]
                 ) {
                     const distance = this.pos[0] + this.size[0] - box.pos[0];
+
                     if (box.canBePushedToRight(distance)) {
                         box.pos[0] = this.pos[0] + this.size[0];
                     } else {
