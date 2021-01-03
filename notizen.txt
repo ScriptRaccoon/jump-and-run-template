@@ -1,18 +1,13 @@
-- push funktion funktioniert noch nicht 'transitiv':
-    -- wenn box eine box pusht, alles ok.
-    -- aber wenn spieler boxA pusht, kann boxA nicht boxB pushen, sondern ignoriert sie
-    -- links gibt es noch einen kleinen freiraum
-    -- aktuelle version funktioniert zwar mit boxen, aber nicht mit dem spieler
-    -- irgendwann muss man auch wieder .leftBox auf null zurücksetzen
+- kleine "rest"-verschiebungen ermöglichen
 
 - when jumping continuously and moving right/left, the jumping stops
 
 - during a jump to the right/left, it is hard to move it back to left/right
 
-- refactor: much of collision logic can move to rectangle class
-
 - collideWith hat code duplication mit overlapsWith
 
 - timer später starten lassen, zur zeit sieht man den start immer verzögert,
     ich glaube @pomle hatte dazu mal ein update gemacht
+
+
 

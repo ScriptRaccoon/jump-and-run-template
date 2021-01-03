@@ -149,8 +149,4 @@ export class Box extends Rectangle {
             (obj) => !this.overlapsWith(obj, +distance)
         );
     }
-
-    distanceToNextObjectOnLeft() {
-        // todo
-    }
 }
