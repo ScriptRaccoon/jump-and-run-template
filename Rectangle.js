@@ -11,6 +11,38 @@ export class Rectangle {
         objectsOfType[this.type].push(this);
     }
 
+    get left() {
+        return this.pos[0];
+    }
+
+    get right() {
+        return this.pos[0] + this.size[0];
+    }
+
+    get top() {
+        return this.pos[1];
+    }
+
+    get bottom() {
+        return this.pos[1] + this.size[1];
+    }
+
+    setLeft(val) {
+        this.pos[0] = val;
+    }
+
+    setRight(val) {
+        this.pos[0] = val - this.size[0];
+    }
+
+    setTop(val) {
+        this.pos[1] = val;
+    }
+
+    setBottom(val) {
+        this.pos[1] = val - this.size[1];
+    }
+
     draw() {
         ctx.fillStyle = this.color;
         ctx.fillRect(...this.pos, ...this.size);
@@ -20,10 +52,10 @@ export class Rectangle {
 
     overlapsWith(rect, distance = 0) {
         return (
-            this.pos[0] + distance <= rect.pos[0] + rect.size[0] && // was <= before
-            this.pos[0] + distance + this.size[0] >= rect.pos[0] && // was >= before
-            this.pos[1] + this.size[1] > rect.pos[1] &&
-            this.pos[1] < rect.pos[1] + rect.size[1]
+            this.left + distance <= rect.right &&
+            this.right + distance >= rect.left &&
+            this.bottom > rect.top &&
+            this.top < rect.bottom
         );
     }
 }

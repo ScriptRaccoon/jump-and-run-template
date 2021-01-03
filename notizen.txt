@@ -12,3 +12,5 @@
 - get-variablen wie .left und .right für rectangles und damit für boxen, evtl auch setter
 
 - brache eine listen für alle boxen , und eine liste für alle rechtecke die keine boxen sind
+
+- collideWith hat code duplication mit overlapsWith
