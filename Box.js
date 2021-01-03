@@ -74,7 +74,7 @@ export class Box extends Rectangle {
                 if (this.prevRight <= obj.left && this.overlapsWith(obj)) {
                     if (this.type === "Player" && obj.type === "Box") {
                         const distance = this.right - obj.left;
-                        if (obj.canBePushedToRight(distance)) {
+                        if (obj.canBeMovedBy([distance, 0])) {
                             obj.setLeft(this.right);
                             return;
                         }
@@ -87,7 +87,7 @@ export class Box extends Rectangle {
                 if (this.prevLeft >= obj.right && this.overlapsWith(obj)) {
                     if (this.type === "Player" && obj.type === "Box") {
                         const distance = obj.right - this.left;
-                        if (obj.canBePushedToLeft(distance)) {
+                        if (obj.canBeMovedBy([-distance, 0])) {
                             obj.setRight(this.left);
                             return;
                         }
@@ -112,17 +112,16 @@ export class Box extends Rectangle {
         };
     }
 
-    canBePushedToLeft(distance) {
-        if (this.left < distance) return false;
+    canBeMovedBy(vector) {
+        if (
+            this.left + vector[0] < 0 ||
+            this.right + vector[0] > canvas.width ||
+            this.top + vector[1] < 0 ||
+            this.bottom + vector[1] > canvas.height
+        )
+            return false;
         return [...objectsOfType.Box, ...objectsOfType.Rectangle].every(
-            (obj) => !this.overlapsWith(obj, -distance)
-        );
-    }
-
-    canBePushedToRight(distance) {
-        if (this.right + distance > canvas.width) return false;
-        return [...objectsOfType.Box, ...objectsOfType.Rectangle].every(
-            (obj) => !this.overlapsWith(obj, +distance)
+            (obj) => !this.overlapsWith(obj, vector)
         );
     }
 }
