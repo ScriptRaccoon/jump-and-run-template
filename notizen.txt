@@ -2,6 +2,8 @@
     -- wenn box eine box pusht, alles ok.
     -- aber wenn spieler boxA pusht, kann boxA nicht boxB pushen, sondern ignoriert sie
     -- links gibt es noch einen kleinen freiraum
+    -- aktuelle version funktioniert zwar mit boxen, aber nicht mit dem spieler
+    -- irgendwann muss man auch wieder .leftBox auf null zurücksetzen
 
 - when jumping continuously and moving right/left, the jumping stops
 
@@ -9,11 +11,8 @@
 
 - refactor: much of collision logic can move to rectangle class
 
-- get-variablen wie .left und .right für rectangles und damit für boxen, evtl auch setter
-
-- brache eine listen für alle boxen , und eine liste für alle rechtecke die keine boxen sind
-
 - collideWith hat code duplication mit overlapsWith
 
 - timer später starten lassen, zur zeit sieht man den start immer verzögert,
     ich glaube @pomle hatte dazu mal ein update gemacht
+

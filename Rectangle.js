@@ -51,6 +51,7 @@ export class Rectangle {
     update() {}
 
     overlapsWith(rect, distance = 0) {
+        if (this === rect) return false;
         return (
             this.left + distance <= rect.right &&
             this.right + distance >= rect.left &&

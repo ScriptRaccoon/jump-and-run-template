@@ -12,7 +12,6 @@ export class Box extends Rectangle {
         this.acc = 0;
         this.onGround = false;
         this.ppos = [...pos];
-        this.leftBox = null;
     }
 
     applyPhysics(deltaTime) {
@@ -75,43 +74,38 @@ export class Box extends Rectangle {
                 if (this === obj) return;
                 if (
                     this.prevRight <= obj.left &&
-                    this.right >= obj.left &&
+                    this.right > obj.left &&
                     this.bottom > obj.top &&
                     this.top < obj.bottom
                 ) {
+                    if (this.type === "Player" && obj.type === "Box") {
+                        const distance = this.right - obj.left;
+                        if (obj.canBePushedToRight(distance)) {
+                            obj.setLeft(this.right);
+                            return;
+                        }
+                    }
                     this.setRight(obj.left);
+                    this.vel[0] = 0;
                 }
             },
             fromRight: () => {
-                // WORK IN PROGRESS (DOES NOT WORK YET)
                 if (this === obj) return;
                 if (
                     this.prevLeft >= obj.right &&
-                    this.left < obj.right && // was <= before
+                    this.left < obj.right &&
                     this.bottom > obj.top &&
                     this.top < obj.bottom
                 ) {
-                    if (obj.type === "Rectangle") {
-                        this.setLeft(obj.right);
-                        this.vel[0] = 0;
-                        return;
-                    } else if (obj.type === "Box") {
-                        // overlap with box on the left
-                        this.leftBox = obj;
+                    if (this.type === "Player" && obj.type === "Box") {
                         const distance = obj.right - this.left;
-                        const canPush = obj.canBePushedToLeft(distance);
-                        if (canPush) {
-                            // can push
+                        if (obj.canBePushedToLeft(distance)) {
                             obj.setRight(this.left);
-                            if (this.type === "Box") {
-                                obj.vel[0] = this.vel[0];
-                            }
-                        } else {
-                            // cannot push
-                            this.setLeft(obj.right);
-                            this.vel[0] = 0;
+                            return;
                         }
                     }
+                    this.setLeft(obj.right);
+                    this.vel[0] = 0;
                 }
             },
             fromAbove: () => {
@@ -142,14 +136,21 @@ export class Box extends Rectangle {
         };
     }
 
-    // WORK IN PROGRESS (DOES NOT WORK YET)
     canBePushedToLeft(distance) {
         if (this.left < distance) return false;
-        if (this.leftBox) {
-            return this.leftBox.canBePushedToLeft(distance);
-        }
-        return objectsOfType.Rectangle.every(
-            (rect) => !this.overlapsWith(rect, -distance)
+        return [...objectsOfType.Box, ...objectsOfType.Rectangle].every(
+            (obj) => !this.overlapsWith(obj, -distance)
         );
+    }
+
+    canBePushedToRight(distance) {
+        if (this.right + distance > canvas.width) return false;
+        return [...objectsOfType.Box, ...objectsOfType.Rectangle].every(
+            (obj) => !this.overlapsWith(obj, +distance)
+        );
+    }
+
+    distanceToNextObjectOnLeft() {
+        // todo
     }
 }
