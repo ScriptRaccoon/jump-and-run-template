@@ -12,6 +12,7 @@ export class Box extends Rectangle {
         this.acc = 0;
         this.onGround = false;
         this.ppos = [...pos];
+        this.leftBox = null;
     }
 
     applyPhysics(deltaTime) {
@@ -95,14 +96,18 @@ export class Box extends Rectangle {
                         this.vel[0] = 0;
                         return;
                     } else if (obj.type === "Box") {
+                        // overlap with box on the left
+                        this.leftBox = obj;
                         const distance = obj.right - this.left;
                         const canPush = obj.canBePushedToLeft(distance);
                         if (canPush) {
+                            // can push
                             obj.setRight(this.left);
                             if (this.type === "Box") {
                                 obj.vel[0] = this.vel[0];
                             }
                         } else {
+                            // cannot push
                             this.setLeft(obj.right);
                             this.vel[0] = 0;
                         }
@@ -140,19 +145,11 @@ export class Box extends Rectangle {
     // WORK IN PROGRESS (DOES NOT WORK YET)
     canBePushedToLeft(distance) {
         if (this.left < distance) return false;
-        const directObstacles = objectsOfType.Rectangle.some((rect) => {
-            const overlap = this.overlapsWith(rect, -distance);
-            console.log({ overlap });
-            return overlap;
-        });
-        // const indirectObstacles = objectsOfType.Box.some(
-        //     (box) =>
-        //         box != this &&
-        //         !excludeList.includes(box) &&
-        //         this.overlapsWith(box, distance) &&
-        //         box.canBePushedToLeft(distance, [box, ...excludeList])
-        // );
-
-        return !directObstacles;
+        if (this.leftBox) {
+            return this.leftBox.canBePushedToLeft(distance);
+        }
+        return objectsOfType.Rectangle.every(
+            (rect) => !this.overlapsWith(rect, -distance)
+        );
     }
 }
