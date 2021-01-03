@@ -50,13 +50,13 @@ export class Rectangle {
 
     update() {}
 
-    overlapsWith(rect, distance = 0) {
-        if (this === rect) return false;
+    overlapsWith(obj, distance = 0) {
+        if (this === obj) return false;
         return (
-            this.left + distance <= rect.right &&
-            this.right + distance >= rect.left &&
-            this.bottom > rect.top &&
-            this.top < rect.bottom
+            this.left + distance < obj.right &&
+            this.right + distance > obj.left &&
+            this.bottom > obj.top &&
+            this.top < obj.bottom
         );
     }
 }

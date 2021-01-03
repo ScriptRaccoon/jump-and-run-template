@@ -4,8 +4,6 @@
 
 - during a jump to the right/left, it is hard to move it back to left/right
 
-- collideWith hat code duplication mit overlapsWith
-
 - timer später starten lassen, zur zeit sieht man den start immer verzögert,
     ich glaube @pomle hatte dazu mal ein update gemacht
 

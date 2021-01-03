@@ -71,13 +71,7 @@ export class Box extends Rectangle {
     collideWith(obj) {
         return {
             fromLeft: () => {
-                if (this === obj) return;
-                if (
-                    this.prevRight <= obj.left &&
-                    this.right > obj.left &&
-                    this.bottom > obj.top &&
-                    this.top < obj.bottom
-                ) {
+                if (this.prevRight <= obj.left && this.overlapsWith(obj)) {
                     if (this.type === "Player" && obj.type === "Box") {
                         const distance = this.right - obj.left;
                         if (obj.canBePushedToRight(distance)) {
@@ -90,13 +84,7 @@ export class Box extends Rectangle {
                 }
             },
             fromRight: () => {
-                if (this === obj) return;
-                if (
-                    this.prevLeft >= obj.right &&
-                    this.left < obj.right &&
-                    this.bottom > obj.top &&
-                    this.top < obj.bottom
-                ) {
+                if (this.prevLeft >= obj.right && this.overlapsWith(obj)) {
                     if (this.type === "Player" && obj.type === "Box") {
                         const distance = obj.right - this.left;
                         if (obj.canBePushedToLeft(distance)) {
@@ -109,26 +97,14 @@ export class Box extends Rectangle {
                 }
             },
             fromAbove: () => {
-                if (this === obj) return;
-                if (
-                    this.prevBottom <= obj.top &&
-                    this.bottom >= obj.top &&
-                    this.right > obj.left &&
-                    this.left < obj.right
-                ) {
+                if (this.prevBottom <= obj.top && this.overlapsWith(obj)) {
                     this.setBottom(obj.top);
                     this.vel[1] = 0;
                     this.onGround = true;
                 }
             },
             fromBelow: () => {
-                if (this === obj) return;
-                if (
-                    this.prevTop >= obj.bottom &&
-                    this.top <= obj.bottom &&
-                    this.right > obj.left &&
-                    this.left < obj.right
-                ) {
+                if (this.prevTop >= obj.bottom && this.overlapsWith(obj)) {
                     this.setTop(obj.bottom);
                     this.vel[1] = 0;
                 }
