@@ -5,3 +5,11 @@ export const objectsOfType = {
     Box: [],
     Player: [],
 };
+
+export function drawObjects() {
+    objects.forEach((obj) => obj.draw());
+}
+
+export function updateObjects(deltaTime) {
+    objects.forEach((obj) => obj.update(deltaTime));
+}
