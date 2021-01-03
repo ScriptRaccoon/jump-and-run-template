@@ -86,7 +86,7 @@ export class Box extends Rectangle {
                 if (this === obj) return;
                 if (
                     this.prevLeft >= obj.right &&
-                    this.left <= obj.right &&
+                    this.left < obj.right && // was <= before
                     this.bottom > obj.top &&
                     this.top < obj.bottom
                 ) {
@@ -96,10 +96,12 @@ export class Box extends Rectangle {
                         return;
                     } else if (obj.type === "Box") {
                         const distance = obj.right - this.left;
-                        const canPush = this.canBePushedToLeft(distance, [this]);
+                        const canPush = obj.canBePushedToLeft(distance);
                         if (canPush) {
                             obj.setRight(this.left);
-                            obj.vel[0] = this.vel[0];
+                            if (this.type === "Box") {
+                                obj.vel[0] = this.vel[0];
+                            }
                         } else {
                             this.setLeft(obj.right);
                             this.vel[0] = 0;
@@ -136,19 +138,21 @@ export class Box extends Rectangle {
     }
 
     // WORK IN PROGRESS (DOES NOT WORK YET)
-    canBePushedToLeft(distance, excludeList = []) {
-        if (this.left <= distance) return false;
-        const directObstacles = objectsOfType.Rectangle.some((rect) =>
-            this.overlapsWith(rect, -distance)
-        );
-        const indirectObstacles = objectsOfType.Box.some(
-            (box) =>
-                box != this &&
-                !excludeList.includes(box) &&
-                this.overlapsWith(box, distance) &&
-                box.canBePushedToLeft(distance, [box, ...excludeList])
-        );
+    canBePushedToLeft(distance) {
+        if (this.left < distance) return false;
+        const directObstacles = objectsOfType.Rectangle.some((rect) => {
+            const overlap = this.overlapsWith(rect, -distance);
+            console.log({ overlap });
+            return overlap;
+        });
+        // const indirectObstacles = objectsOfType.Box.some(
+        //     (box) =>
+        //         box != this &&
+        //         !excludeList.includes(box) &&
+        //         this.overlapsWith(box, distance) &&
+        //         box.canBePushedToLeft(distance, [box, ...excludeList])
+        // );
 
-        return !directObstacles && !indirectObstacles;
+        return !directObstacles;
     }
 }

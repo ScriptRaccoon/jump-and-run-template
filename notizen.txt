@@ -14,3 +14,6 @@
 - brache eine listen für alle boxen , und eine liste für alle rechtecke die keine boxen sind
 
 - collideWith hat code duplication mit overlapsWith
+
+- timer später starten lassen, zur zeit sieht man den start immer verzögert,
+    ich glaube @pomle hatte dazu mal ein update gemacht
