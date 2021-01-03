@@ -3,9 +3,3 @@
 - when jumping continuously and moving right/left, the jumping stops
 
 - during a jump to the right/left, it is hard to move it back to left/right
-
-- timer später starten lassen, zur zeit sieht man den start immer verzögert,
-    ich glaube @pomle hatte dazu mal ein update gemacht
-
-
-

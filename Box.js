@@ -1,5 +1,5 @@
 import { Rectangle } from "./Rectangle.js";
-import { canvas } from "./canvas.js";
+import { gameWidth, gameHeight } from "./canvas.js";
 import { objects, objectsOfType } from "./objects.js";
 
 export class Box extends Rectangle {
@@ -35,19 +35,25 @@ export class Box extends Rectangle {
         });
 
         this.boundToCanvas();
+
+        this.specificUpdate();
+    }
+
+    specificUpdate() {
+        // can be specified by superclasses like 'Player'
     }
 
     boundToCanvas() {
-        if (this.bottom >= canvas.height) {
+        if (this.bottom >= gameHeight) {
             this.vel[1] = 0;
-            this.setBottom(canvas.height);
+            this.setBottom(gameHeight);
             this.onGround = true;
         }
         if (this.left <= 0) {
             this.setLeft(0);
             this.vel[0] = 0;
-        } else if (this.right >= canvas.width) {
-            this.setRight(canvas.width);
+        } else if (this.right >= gameWidth) {
+            this.setRight(gameWidth);
             this.vel[0] = 0;
         }
     }
@@ -115,9 +121,9 @@ export class Box extends Rectangle {
     canBeMovedBy(vector) {
         if (
             this.left + vector[0] < 0 ||
-            this.right + vector[0] > canvas.width ||
+            this.right + vector[0] > gameWidth ||
             this.top + vector[1] < 0 ||
-            this.bottom + vector[1] > canvas.height
+            this.bottom + vector[1] > gameHeight
         )
             return false;
         return [...objectsOfType.Box, ...objectsOfType.Rectangle].every(

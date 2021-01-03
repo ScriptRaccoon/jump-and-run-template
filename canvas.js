@@ -5,8 +5,9 @@ export function clearCanvas() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
 
-const info = document.getElementById("info");
+export const gameWidth = 1000;
+export const gameHeight = 1000;
 
-export function hideInfoText() {
-    info.style.display = "none";
-}
+export const camera = {
+    pos: [0, gameHeight - canvas.height],
+};
