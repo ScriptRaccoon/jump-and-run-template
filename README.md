@@ -1,5 +1,7 @@
 ## Jump and Run Template
 
+Demo: https://jump-and-run-template.netlify.app
+
 This is a template for jump and run games in Vanilla Javascript.
 
 There are classes for
@@ -10,4 +12,4 @@ There are classes for
 
 In particular, the box class has some elementary physics (velocity, acceleration, gravity, friction) and collision detection. Players are seen as special boxes which can be controlled via the arrow keys and have the trait of pushing boxes.
 
-The animation is done by the timer class.
+The animation is done by the timer class which is borrowed from [this repo](https://github.com/meth-meth-method/super-mario).
