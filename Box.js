@@ -81,7 +81,13 @@ export class Box extends Rectangle {
                     if (this.type === "Player" && obj.type === "Box") {
                         const distance = this.right - obj.left;
                         if (obj.canBeMovedBy([distance, 0])) {
-                            obj.setLeft(this.right);
+                            obj.setLeft(obj.left + distance);
+                            return;
+                        }
+                        const smallDistance = obj.getDistanceToRightObject();
+                        if (obj.canBeMovedBy([smallDistance, 0])) {
+                            obj.setLeft(obj.left + smallDistance);
+                            this.setRight(obj.left);
                             return;
                         }
                     }
@@ -95,6 +101,12 @@ export class Box extends Rectangle {
                         const distance = obj.right - this.left;
                         if (obj.canBeMovedBy([-distance, 0])) {
                             obj.setRight(this.left);
+                            return;
+                        }
+                        const smallDistance = obj.getDistanceToLeftObject();
+                        if (obj.canBeMovedBy([-smallDistance, 0])) {
+                            obj.setLeft(obj.left - smallDistance);
+                            this.setLeft(obj.right);
                             return;
                         }
                     }
@@ -129,5 +141,23 @@ export class Box extends Rectangle {
         return [...objectsOfType.Box, ...objectsOfType.Rectangle].every(
             (obj) => !this.overlapsWith(obj, vector)
         );
+    }
+
+    getDistanceToRightObject() {
+        let d = gameWidth - this.right;
+        [...objectsOfType.Box, ...objectsOfType.Rectangle].forEach((obj) => {
+            if (this.right <= obj.left && this.bottom > obj.top && this.top < obj.bottom)
+                d = Math.min(d, obj.left - this.right);
+        });
+        return d;
+    }
+
+    getDistanceToLeftObject() {
+        let d = this.left;
+        [...objectsOfType.Box, ...objectsOfType.Rectangle].forEach((obj) => {
+            if (this.left >= obj.right && this.bottom > obj.top && this.top < obj.bottom)
+                d = Math.min(d, this.left - obj.right);
+        });
+        return d;
     }
 }
