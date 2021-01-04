@@ -14,6 +14,22 @@ export class Box extends Rectangle {
         this.ppos = [...pos];
     }
 
+    get prevLeft() {
+        return this.ppos[0];
+    }
+
+    get prevRight() {
+        return this.ppos[0] + this.size[0];
+    }
+
+    get prevTop() {
+        return this.ppos[1];
+    }
+
+    get prevBottom() {
+        return this.ppos[1] + this.size[1];
+    }
+
     applyPhysics(deltaTime) {
         this.vel[0] += this.acc * deltaTime;
         this.vel[0] *= 1 - this.friction;
@@ -26,21 +42,18 @@ export class Box extends Rectangle {
     update(deltaTime) {
         this.ppos = [...this.pos];
         this.applyPhysics(deltaTime);
-
         objects.forEach((obj) => {
             this.collideWith(obj).fromAbove();
             this.collideWith(obj).fromBelow();
             this.collideWith(obj).fromLeft();
             this.collideWith(obj).fromRight();
         });
-
-        this.boundToCanvas();
-
         this.specificUpdate();
+        this.boundToCanvas();
     }
 
     specificUpdate() {
-        // can be specified by superclasses like 'Player'
+        return;
     }
 
     boundToCanvas() {
@@ -58,58 +71,25 @@ export class Box extends Rectangle {
         }
     }
 
-    get prevLeft() {
-        return this.ppos[0];
-    }
-
-    get prevRight() {
-        return this.ppos[0] + this.size[0];
-    }
-
-    get prevTop() {
-        return this.ppos[1];
-    }
-
-    get prevBottom() {
-        return this.ppos[1] + this.size[1];
+    push() {
+        return {
+            toLeft: () => false,
+            toRight: () => false,
+        };
     }
 
     collideWith(obj) {
         return {
             fromLeft: () => {
                 if (this.prevRight <= obj.left && this.overlapsWith(obj)) {
-                    if (this.type === "Player" && obj.type === "Box") {
-                        const distance = this.right - obj.left;
-                        if (obj.canBeMovedBy([distance, 0])) {
-                            obj.setLeft(obj.left + distance);
-                            return;
-                        }
-                        const smallDistance = obj.getDistanceToRightObject();
-                        if (obj.canBeMovedBy([smallDistance, 0])) {
-                            obj.setLeft(obj.left + smallDistance);
-                            this.setRight(obj.left);
-                            return;
-                        }
-                    }
+                    if (this.push(obj).toRight()) return;
                     this.setRight(obj.left);
                     this.vel[0] = 0;
                 }
             },
             fromRight: () => {
                 if (this.prevLeft >= obj.right && this.overlapsWith(obj)) {
-                    if (this.type === "Player" && obj.type === "Box") {
-                        const distance = obj.right - this.left;
-                        if (obj.canBeMovedBy([-distance, 0])) {
-                            obj.setRight(this.left);
-                            return;
-                        }
-                        const smallDistance = obj.getDistanceToLeftObject();
-                        if (obj.canBeMovedBy([-smallDistance, 0])) {
-                            obj.setLeft(obj.left - smallDistance);
-                            this.setLeft(obj.right);
-                            return;
-                        }
-                    }
+                    if (this.push(obj).toLeft()) return;
                     this.setLeft(obj.right);
                     this.vel[0] = 0;
                 }
