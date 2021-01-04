@@ -1,3 +1,5 @@
 - when jumping continuously and moving right/left, the jumping stops
 
 - during a jump to the right/left, it is hard to move it back to left/right
+
+- push trait should be moved into player class
