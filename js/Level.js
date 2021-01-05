@@ -17,25 +17,23 @@ export class Level {
         this.cameraPos = options.cameraPos || [0, this.size[1] - canvas.height];
         this.index = levelList.length;
         this.objects = [];
-        this.objectsOfType = { Rectangle: [], Player: [], Box: [] };
-        if (options.objects) {
-            this.addObjects(options.objects);
-        }
+        this.objectsOfType = { Rectangle: [], Player: [], Box: [], Goal: [] };
+        this.addObjects(options.objects || []);
         this.player = null;
         this.timer = new Timer();
         this.timer.update = (deltaTime) => this.update(deltaTime);
         this.status = STATUS.READY;
+        this.won = false;
         this.addControls();
         levelList.push(this);
     }
 
     addControls() {
-        writeInfo("Press 'Space' to start or pause the game");
         window.addEventListener("keydown", (e) => {
             if (e.key === " ") {
                 if (this.status == STATUS.READY) {
                     this.start();
-                } else if (this.status === STATUS.PAUSED) {
+                } else if (this.status === STATUS.PAUSED && !this.won) {
                     this.resume();
                 } else if (this.status === STATUS.STARTED) {
                     this.pause();
@@ -82,6 +80,11 @@ export class Level {
         this.updateObjects(deltaTime);
         this.updateCamera();
         this.drawObjects();
+        if (this.won) {
+            this.status = STATUS.PAUSED;
+            this.timer.pause();
+            writeInfo("You won!");
+        }
     }
 
     start() {
@@ -90,7 +93,11 @@ export class Level {
             return;
         }
         this.player = this.objectsOfType.Player[0];
-        this.resume();
+        writeInfo(`Level ${this.index}`);
+        this.status = STATUS.STARTED;
+        this.timer.paused = false;
+        this.timer.start();
+        setTimeout(hideInfo, 2000);
     }
 
     pause() {
@@ -101,8 +108,8 @@ export class Level {
 
     resume() {
         this.status = STATUS.STARTED;
-        hideInfo();
         this.timer.paused = false;
         this.timer.start();
+        hideInfo();
     }
 }

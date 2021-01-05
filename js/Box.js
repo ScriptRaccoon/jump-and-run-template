@@ -41,12 +41,18 @@ export class Box extends Rectangle {
         this.ppos = [...this.pos];
         this.applyPhysics(deltaTime);
         this.level.objects.forEach((obj) => {
+            if (obj.type === "Goal") return;
             this.collideWith(obj).fromAbove();
             this.collideWith(obj).fromBelow();
             this.collideWith(obj).fromLeft();
             this.collideWith(obj).fromRight();
         });
         this.boundToLevel();
+        this.checkGoal();
+    }
+
+    checkGoal() {
+        return;
     }
 
     boundToLevel() {

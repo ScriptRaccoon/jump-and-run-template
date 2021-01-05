@@ -81,4 +81,11 @@ export class Player extends Box {
             },
         };
     }
+
+    checkGoal() {
+        const hasReachedGoal = this.level.objectsOfType.Goal.some((goal) =>
+            this.overlapsWith(goal)
+        );
+        if (hasReachedGoal) this.level.won = true;
+    }
 }
