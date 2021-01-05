@@ -1,37 +1,41 @@
-import { drawObjects, updateObjects } from "./objects.js";
-import { clearCanvas } from "./canvas.js";
-
-class Timer {
-    constructor(deltaTime = 1000 / 60) {
-        let accumulatedTime = 0;
-        let lastTime = null;
-        this.loop = (currentTime) => {
-            if (lastTime) {
-                accumulatedTime += currentTime - lastTime;
-                if (accumulatedTime > 1000) {
-                    accumulatedTime = 1000;
-                }
-                while (accumulatedTime > deltaTime) {
-                    this.update(deltaTime);
-                    accumulatedTime -= deltaTime;
-                }
-            }
-            lastTime = currentTime;
-            this.start();
-        };
+export class Timer {
+    constructor(deltaTime) {
+        this.accumulatedTime = 0;
+        this.lastTime = null;
+        this.paused = false;
+        this.deltaTime = deltaTime || 1000 / 60;
     }
+
     start() {
-        requestAnimationFrame(this.loop);
+        requestAnimationFrame(this.loop.bind(this));
     }
 
-    update(deltaTime) {
-        clearCanvas();
-        updateObjects(deltaTime);
-        drawObjects();
+    loop(currentTime) {
+        if (this.paused) return;
+        if (this.lastTime) {
+            this.accumulatedTime += currentTime - this.lastTime;
+            if (this.accumulatedTime > 1000) {
+                this.accumulatedTime = 1000;
+            }
+            while (this.accumulatedTime > this.deltaTime) {
+                this.update(this.deltaTime);
+                this.accumulatedTime -= this.deltaTime;
+            }
+        }
+        this.lastTime = currentTime;
+        this.start();
+    }
+
+    pause() {
+        this.lastTime = null;
+        this.paused = true;
+    }
+
+    update() {
+        return;
     }
 
     debug() {
-        this.update(1000 / 60);
         window.addEventListener("keydown", (e) => {
             if (e.key === "d") {
                 this.update(1000 / 60);
@@ -39,5 +43,3 @@ class Timer {
         });
     }
 }
-
-export const timer = new Timer();

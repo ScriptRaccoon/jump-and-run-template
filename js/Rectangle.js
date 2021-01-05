@@ -1,5 +1,4 @@
-import { ctx, camera } from "./canvas.js";
-import { objects, objectsOfType } from "./objects.js";
+import { ctx } from "./canvas.js";
 
 export class Rectangle {
     constructor(options, type) {
@@ -7,8 +6,7 @@ export class Rectangle {
         this.size = options.size;
         this.color = options.color;
         this.type = type || "Rectangle";
-        objects.push(this);
-        objectsOfType[this.type].push(this);
+        this.level = null;
     }
 
     get left() {
@@ -46,8 +44,8 @@ export class Rectangle {
     draw() {
         ctx.fillStyle = this.color;
         ctx.fillRect(
-            this.pos[0] - camera.pos[0],
-            this.pos[1] - camera.pos[1],
+            this.pos[0] - this.level.cameraPos[0],
+            this.pos[1] - this.level.cameraPos[1],
             this.size[0],
             this.size[1]
         );

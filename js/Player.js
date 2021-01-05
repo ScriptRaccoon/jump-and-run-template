@@ -1,6 +1,4 @@
 import { Box } from "./Box.js";
-import { canvas, camera, gameWidth, gameHeight } from "./canvas.js";
-import { minmax } from "./utils.js";
 
 export class Player extends Box {
     constructor(options, type) {
@@ -47,20 +45,6 @@ export class Player extends Box {
                     break;
             }
         });
-    }
-
-    specificUpdate() {
-        camera.pos[0] = minmax(
-            this.right - canvas.width / 2,
-            0,
-            gameWidth - canvas.width
-        );
-
-        camera.pos[1] = minmax(
-            this.top - canvas.height / 2,
-            0,
-            gameHeight - canvas.height
-        );
     }
 
     push(obj) {

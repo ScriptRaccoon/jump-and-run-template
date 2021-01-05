@@ -18,6 +18,7 @@ main {
 }
 
 main > aside {
+    display: none;
     position: absolute;
     color: white;
     font-size: 30px;

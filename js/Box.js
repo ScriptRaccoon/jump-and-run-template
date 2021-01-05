@@ -1,6 +1,4 @@
 import { Rectangle } from "./Rectangle.js";
-import { gameWidth, gameHeight } from "./canvas.js";
-import { objects, objectsOfType } from "./objects.js";
 
 export class Box extends Rectangle {
     constructor(options, type) {
@@ -42,31 +40,26 @@ export class Box extends Rectangle {
     update(deltaTime) {
         this.ppos = [...this.pos];
         this.applyPhysics(deltaTime);
-        objects.forEach((obj) => {
+        this.level.objects.forEach((obj) => {
             this.collideWith(obj).fromAbove();
             this.collideWith(obj).fromBelow();
             this.collideWith(obj).fromLeft();
             this.collideWith(obj).fromRight();
         });
-        this.specificUpdate();
-        this.boundToCanvas();
+        this.boundToLevel();
     }
 
-    specificUpdate() {
-        return;
-    }
-
-    boundToCanvas() {
-        if (this.bottom >= gameHeight) {
+    boundToLevel() {
+        if (this.bottom >= this.level.size[1]) {
             this.vel[1] = 0;
-            this.setBottom(gameHeight);
+            this.setBottom(this.level.size[1]);
             this.onGround = true;
         }
         if (this.left <= 0) {
             this.setLeft(0);
             this.vel[0] = 0;
-        } else if (this.right >= gameWidth) {
-            this.setRight(gameWidth);
+        } else if (this.right >= this.level.size[0]) {
+            this.setRight(this.level.size[0]);
             this.vel[0] = 0;
         }
     }
@@ -113,31 +106,44 @@ export class Box extends Rectangle {
     canBeMovedBy(vector) {
         if (
             this.left + vector[0] < 0 ||
-            this.right + vector[0] > gameWidth ||
+            this.right + vector[0] > this.level.size[0] ||
             this.top + vector[1] < 0 ||
-            this.bottom + vector[1] > gameHeight
+            this.bottom + vector[1] > this.level.size[1]
         )
             return false;
-        return [...objectsOfType.Box, ...objectsOfType.Rectangle].every(
-            (obj) => !this.overlapsWith(obj, vector)
-        );
+        return [
+            ...this.level.objectsOfType.Box,
+            ...this.level.objectsOfType.Rectangle,
+        ].every((obj) => !this.overlapsWith(obj, vector));
     }
 
     getDistanceToRightObject() {
-        let d = gameWidth - this.right;
-        [...objectsOfType.Box, ...objectsOfType.Rectangle].forEach((obj) => {
-            if (this.right <= obj.left && this.bottom > obj.top && this.top < obj.bottom)
-                d = Math.min(d, obj.left - this.right);
-        });
+        let d = this.level.size[0] - this.right;
+        [...this.level.objectsOfType.Box, ...this.level.objectsOfType.Rectangle].forEach(
+            (obj) => {
+                if (
+                    this.right <= obj.left &&
+                    this.bottom > obj.top &&
+                    this.top < obj.bottom
+                )
+                    d = Math.min(d, obj.left - this.right);
+            }
+        );
         return d;
     }
 
     getDistanceToLeftObject() {
         let d = this.left;
-        [...objectsOfType.Box, ...objectsOfType.Rectangle].forEach((obj) => {
-            if (this.left >= obj.right && this.bottom > obj.top && this.top < obj.bottom)
-                d = Math.min(d, this.left - obj.right);
-        });
+        [...this.level.objectsOfType.Box, ...this.level.objectsOfType.Rectangle].forEach(
+            (obj) => {
+                if (
+                    this.left >= obj.right &&
+                    this.bottom > obj.top &&
+                    this.top < obj.bottom
+                )
+                    d = Math.min(d, this.left - obj.right);
+            }
+        );
         return d;
     }
 }
