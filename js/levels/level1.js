@@ -2,10 +2,12 @@ import { Player } from "../Player.js";
 import { Rectangle } from "../Rectangle.js";
 import { Box } from "../Box.js";
 import { Level } from "../Level.js";
+import { Goal } from "../Goal.js";
 
 export const level1 = new Level({
     size: [1000, 1000],
     objects: [
+        new Goal({ pos: [800, 100], size: [50, 50], color: "black" }),
         new Player({ pos: [30, 800], size: [40, 40] }),
         new Rectangle({ pos: [500, 500], size: [200, 10], color: "blue" }),
         new Rectangle({ pos: [800, 700], size: [50, 10], color: "blue" }),

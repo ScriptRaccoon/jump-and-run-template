@@ -24,22 +24,28 @@ export class Level {
         this.timer.update = (deltaTime) => this.update(deltaTime);
         this.status = STATUS.READY;
         this.won = false;
-        this.addControls();
         levelList.push(this);
+        this.keyFuncRef = (e) => this.keyFunction(e);
     }
 
     addControls() {
-        window.addEventListener("keydown", (e) => {
-            if (e.key === " ") {
-                if (this.status == STATUS.READY) {
-                    this.start();
-                } else if (this.status === STATUS.PAUSED && !this.won) {
-                    this.resume();
-                } else if (this.status === STATUS.STARTED) {
-                    this.pause();
-                }
+        window.addEventListener("keydown", this.keyFuncRef);
+    }
+
+    removeControls() {
+        window.removeEventListener("keydown", this.keyFuncRef);
+    }
+
+    keyFunction(e) {
+        if (e.key === " ") {
+            if (this.status == STATUS.READY) {
+                this.start();
+            } else if (this.status === STATUS.PAUSED && !this.won) {
+                this.resume();
+            } else if (this.status === STATUS.STARTED) {
+                this.pause();
             }
-        });
+        }
     }
 
     addObject(obj) {
@@ -80,11 +86,26 @@ export class Level {
         this.updateObjects(deltaTime);
         this.updateCamera();
         this.drawObjects();
+        this.checkWin();
+    }
+
+    checkWin() {
         if (this.won) {
             this.status = STATUS.PAUSED;
             this.timer.pause();
+            this.removeControls();
+            if (this.index + 1 >= levelList.length) {
+                writeInfo("You won the game!");
+                return;
+            }
             writeInfo("You won!");
+            this.switchToNextLevel();
         }
+    }
+
+    switchToNextLevel() {
+        const nextLevel = levelList[this.index + 1];
+        nextLevel.addControls();
     }
 
     start() {
