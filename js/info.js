@@ -6,5 +6,5 @@ export function hideInfo() {
 
 export function writeInfo(txt) {
     infoElement.style.display = "block";
-    infoElement.textContent = txt;
+    infoElement.innerHTML = txt;
 }
