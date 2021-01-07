@@ -7,6 +7,7 @@ export class Rectangle {
         this.color = options.color;
         this.type = type || "Rectangle";
         this.level = null;
+        this.originalPos = [...this.pos];
     }
 
     get left() {
@@ -61,5 +62,9 @@ export class Rectangle {
             this.bottom + vector[1] > obj.top &&
             this.top + vector[1] < obj.bottom
         );
+    }
+
+    reset() {
+        this.pos = [...this.originalPos];
     }
 }

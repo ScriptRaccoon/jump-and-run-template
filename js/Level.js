@@ -13,6 +13,7 @@ export class Level {
     constructor(options) {
         this.size = options.size || [canvas.width, canvas.height];
         this.cameraPos = options.cameraPos || [0, this.size[1] - canvas.height];
+        this.originalCameraPos = [...this.cameraPos];
         this.objects = [];
         this.objectsOfType = { Rectangle: [], Player: [], Box: [], Goal: [] };
         this.addObjects(options.objects || []);
@@ -24,6 +25,13 @@ export class Level {
         this.keyFuncRef = (e) => this.keyFunction(e);
         this.game = null;
         this.index = null;
+    }
+
+    reset() {
+        this.objects.forEach((obj) => {
+            obj.reset();
+        });
+        this.cameraPos = [...this.originalCameraPos];
     }
 
     addControls() {
@@ -43,6 +51,8 @@ export class Level {
             } else if (this.status === STATUS.STARTED) {
                 this.pause();
             }
+        } else if (e.key === "r" && this.status === STATUS.STARTED) {
+            this.reset();
         }
     }
 

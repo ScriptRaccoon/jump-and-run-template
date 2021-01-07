@@ -7,9 +7,16 @@ export class Box extends Rectangle {
         this.grav = grav || 0.005;
         this.friction = friction || 0;
         this.vel = vel ? vel : [0, 0];
+        this.originalVel = [...this.vel];
         this.acc = 0;
         this.onGround = false;
         this.ppos = [...pos];
+    }
+
+    reset() {
+        this.pos = [...this.originalPos];
+        this.vel = [...this.originalVel];
+        this.acc = 0;
     }
 
     get prevLeft() {

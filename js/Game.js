@@ -21,7 +21,10 @@ export class Game {
         if (this.levelList.length === 0) return;
         this.currentLevel.drawObjects();
         this.currentLevel.addControls();
-        writeInfo("Press 'Space' to start or pause the game.");
+        writeInfo(
+            "Press 'Space' to start or pause the game.<br>" +
+                "Press 'r' to restart the level."
+        );
     }
 
     switchToNextLevel() {
