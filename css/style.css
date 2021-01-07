@@ -6,7 +6,7 @@
 body {
     background-color: black;
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    color: white;
+    color: #eee;
 }
 
 main {
@@ -15,17 +15,25 @@ main {
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    position: relative;
 }
 
 #info {
     display: none;
     text-align: center;
     position: absolute;
-    color: white;
     font-size: 30px;
     font-weight: 600;
     background-color: rgb(0, 0, 250, 0.7);
     padding: 20px 50px;
+}
+
+#levelCount {
+    margin-top: 10px;
+    opacity: 0.6;
+    width: 800px;
+    text-align: right;
+    font-size: 18px;
 }
 
 canvas {
