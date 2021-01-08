@@ -5,14 +5,12 @@ import { Box } from "../objects/Box.js";
 import { Goal } from "../objects/Goal.js";
 
 export const level1 = new Level({
-    size: [800, 1200],
+    size: [800, 600],
     objects: [
-        new Goal({ pos: [10, 30], size: [50, 50], color: "black" }),
-        new Player({ pos: [30, 1160], size: [40, 40] }),
-        new Rectangle({ pos: [600, 1000], size: [100, 10], color: "blue" }),
-        new Rectangle({ pos: [400, 800], size: [100, 10], color: "blue" }),
-        new Rectangle({ pos: [200, 600], size: [100, 10], color: "blue" }),
-        new Rectangle({ pos: [400, 400], size: [100, 10], color: "blue" }),
-        new Box({ pos: [450, 350], size: [50, 50], color: "purple" }),
+        new Goal({ pos: [125, 20], size: [50, 50], color: "black" }),
+        new Player({ pos: [20, 500], size: [40, 40] }),
+        new Rectangle({ pos: [600, 250], size: [100, 10], color: "blue" }),
+        new Rectangle({ pos: [50, 100], size: [200, 10], color: "blue" }),
+        new Box({ pos: [180, 500], size: [60, 100], color: "orange" }),
     ],
 });

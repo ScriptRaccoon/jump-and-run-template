@@ -1,5 +1,6 @@
-import { level0 } from "./levels/level0.js";
 import { level1 } from "./levels/level1.js";
+import { level2 } from "./levels/level2.js";
+import { level3 } from "./levels/level3.js";
 import { writeInfo } from "./info.js";
 
 const levelCount = document.getElementById("levelCount");
@@ -42,4 +43,4 @@ export class Game {
     }
 }
 
-export const game = new Game([level0, level1]);
+export const game = new Game([level1, level2, level3]);
